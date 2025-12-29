@@ -1,0 +1,8 @@
+{
+    "tasks":[
+    {"id":1,"title":"Complete React assisgnemt","dueDate":"2025-12-27","status":"pending"},
+    { "id": 2, "title": "Read a book", "dueDate": "2025-12-29", "status": "done" },
+    { "id": 2, "title": "Go on a hike", "dueDate": "2025-12-30", "status": "pending" }
+
+]
+}
