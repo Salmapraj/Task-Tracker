@@ -2,9 +2,9 @@ import { ClipboardList, LayoutDashboard, ListChecks, Settings } from 'lucide-rea
 import { Link } from 'react-router-dom'
 const Siderbar = () => {
   return (
-    <div className="min-h-screen flex-shrink-0  w-[300px] border border-gray-200">
+    <div className="min-h-screen   w-[300px]  border border-gray-200">
       <Link to="/">
-        <div className="flex  gap-2 mb-4 border-b border-gray-200 px-8 py-4 ">
+        <div className="flex  gap-2 mb-4 shadow-xs px-8 py-4 ">
           <div className="bg-purple-700  p-1 rounded-lg ">
             <ClipboardList size={26} className="text-gray-200" />
           </div>

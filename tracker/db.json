@@ -1,8 +1,10 @@
 {
     "tasks":[
-    {"id":1,"title":"Complete React assisgnemt","dueDate":"2025-12-27","status":"pending"},
+    {"id":1,"title":"Complete React assisgnemt","dueDate":"2025-12-27","status":"done"},
+    { "id": 3, "title": "Learn Skating", "dueDate": "2025-01-05", "status": "pending" },
     { "id": 2, "title": "Read a book", "dueDate": "2025-12-29", "status": "done" },
-    { "id": 2, "title": "Go on a hike", "dueDate": "2025-12-30", "status": "pending" }
+    { "id": 3, "title": "Go on a hike", "dueDate": "2025-12-30", "status": "pending" },
+    { "id": 4, "title": "Water flowers, they need water or they will die", "dueDate": "2025-01-01", "status": "pending" }
 
 ]
 }

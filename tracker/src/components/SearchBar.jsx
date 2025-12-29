@@ -7,8 +7,8 @@ const SearchBar = () => {
         <Search size={19} className="mr-1 text-gray-500" />
         <input
           type="text"
-          className="w-full outline-none p-1 text-gray-600 text-lg"
-          placeholder="search acrossyour workspace"
+          className="w-full outline-none p-1 text-gray-600 "
+          placeholder="Search across your workspace"
         />
       </div>
     </div>
