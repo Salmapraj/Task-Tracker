@@ -10,7 +10,7 @@
       "id": "6",
       "title": "Go on a hike",
       "dueDate": "2025-12-30",
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "eddd",
@@ -34,7 +34,7 @@
       "id": "823c",
       "title": "bmbn",
       "dueDate": "2026-01-28",
-      "status": "pending"
+      "status": "done"
     }
   ]
 }

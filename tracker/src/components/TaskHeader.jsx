@@ -1,9 +1,8 @@
-import { Pencil, Trash2,CircleCheck  } from 'lucide-react'
+import { Pencil, Trash2, CircleCheck } from 'lucide-react'
 
-const Tasks = ({fetchedTasks,onUpdate,onDelete}) => {
-
+const Tasks = ({ fetchedTasks, onUpdate, onDelete, onToggleStatus }) => {
   return (
-    <div id='tasks' className=" shadow-xs ">
+    <div id="tasks" className=" shadow-xs ">
       <div className="grid mx-6 bg-[#fafdfd]  grid-cols-4 text-sm font-bold py-5 rounded-xl px-3 text-gray-400">
         <div className=" ">
           <h2>TASK</h2>
@@ -25,9 +24,28 @@ const Tasks = ({fetchedTasks,onUpdate,onDelete}) => {
           key={task.id}
           className="grid border-b border-gray-200  py-2 mx-6 px-4 gap-3 space-y-3 mt-5 grid-cols-4 text-sm "
         >
-          <div className='flex gap-4 items-center'>
+          {/* <div className='flex gap-4 items-center'>
             <p className="text-[17px] text-gray-500 font-semibold">{task.title}</p>
+          </div> */}
+          <div className="flex gap-4 items-center">
+            <button onClick={() => onToggleStatus(task)}>
+              <CircleCheck
+                size={22}
+                className={
+                  task.status === 'done' ? 'text-green-600' : 'text-gray-300 hover:text-green-500'
+                }
+              />
+            </button>
+
+            <p
+              className={`text-[17px] font-semibold ${
+                task.status === 'done' ? 'line-through text-gray-400' : 'text-gray-500'
+              }`}
+            >
+              {task.title}
+            </p>
           </div>
+
           <div className="">
             <p
               className={
@@ -48,7 +66,11 @@ const Tasks = ({fetchedTasks,onUpdate,onDelete}) => {
             </p>
           </div>
           <div className="flex gap-6">
-            <button onClick={() => {onUpdate(task)}}>
+            <button
+              onClick={() => {
+                onUpdate(task)
+              }}
+            >
               <Pencil size={18} className="text-gray-500 cursor-pointer" />
             </button>
             <button onClick={() => onDelete(task.id)}>

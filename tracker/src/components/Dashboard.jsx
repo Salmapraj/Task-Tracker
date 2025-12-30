@@ -22,6 +22,16 @@ const Dashboard = () => {
       console.log('Error:', error)
     }
   }
+
+  const toggleTaskStatus = task => {
+  const newStatus = task.status === 'pending' ? 'done' : 'pending'
+
+  updateTask(task.id, {
+    ...task,
+    status: newStatus,
+  })
+}
+
   let copiedTasks = [...alltasks]
 
   //search
@@ -115,6 +125,9 @@ const Dashboard = () => {
               setIsModelOpen(true)
             }}
             onDelete={deleteTask}
+  onToggleStatus={toggleTaskStatus}
+
+
           />
         )}
       </div>
