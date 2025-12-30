@@ -9,5 +9,5 @@ export default defineConfig({
   plugins: [react(),
         tailwindcss(),
   ],
-  base:"/Task-Tracker",
+  base:process.env.VITE_BASE_PATH || '/Task-Tracker',
 })
