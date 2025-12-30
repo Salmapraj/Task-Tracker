@@ -6,11 +6,11 @@ import { useTasks } from '../hooks/useTasks'
 import TaskModal from './TaskForm'
 const Dashboard = () => {
   const [showTask, setShowTask] = useState('ALL')
-  const { addTask: createTask,alltasks, updateTask, deleteTask, fetchTasks,filterTask } = useTasks()
+  const { addTask: createTask, alltasks, updateTask, deleteTask, loading } = useTasks()
   const [isModelOpen, setIsModelOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
-
-  const handleTaskSubmit = async (formData) => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const handleTaskSubmit = async formData => {
     try {
       if (selectedTask) {
         await updateTask(selectedTask.id, formData)
@@ -22,28 +22,29 @@ const Dashboard = () => {
       console.log('Error:', error)
     }
   }
-  const copiedArray =[...alltasks]
-  const sortedDate = copiedArray.sort((a,b)=>new Date(b.dueDate).getTime()-new Date(a.dueDate).getTime() )
-console.log('sorted array',sortedDate)
+  let copiedTasks = [...alltasks]
 
-  const handleStatus =async (status) => {
-    try {
-      setShowTask(status)
-      if(status==='ALL'){
-        await fetchTasks()
-      }else {
-    await filterTask(status.toLowerCase())
+  //search
+  if (searchQuery.trim()) {
+    copiedTasks = copiedTasks.filter(task =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+  }
+  copiedTasks.sort((a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime())
+
+  //filter
+  if (showTask !== 'ALL') {
+    copiedTasks = copiedTasks.filter(task => task.status === showTask.toLowerCase())
   }
 
-    } catch (error) {
-      console.log('Error:', error)
-    }
+  const handleStatus = status => {
+    setShowTask(status)
   }
 
   return (
-    <div className="bg-[#f8fbfd] min-h-screen  flex flex-col w-full">
+    <div id='dashboard' className="bg-[#f8fbfd] min-h-screen  flex flex-col w-full">
       <div className="shadow-xs">
-        <SearchBar />
+        <SearchBar onSearch={setSearchQuery} />
       </div>
       <div className=" bg-white h-full my-5  px-4 shadow-sm py-3 mt-8 mx-12 rounded-lg">
         {/* //header */}
@@ -62,7 +63,7 @@ console.log('sorted array',sortedDate)
               <button
                 className={`px-3 cursor-pointer ${showTask.toUpperCase() === status ? 'text-purple-700  shadow-sm px-4 text-sm py-2 font-bold   rounded-xl ' : 'text-gray-400 text-sm py-2 font-bold   hover:text-gray-900'}`}
                 key={status}
-                onClick={()=>handleStatus(status)}
+                onClick={() => handleStatus(status)}
               >
                 {status}
               </button>
@@ -81,16 +82,41 @@ console.log('sorted array',sortedDate)
             </div>
           </div>
         </div>
-
-        {/* main content */}
-        <Tasks
-          fetchedTasks={copiedArray}
-          onUpdate={task => {
-            setSelectedTask(task)
-            setIsModelOpen(true)
-          }}
-          onDelete={deleteTask}
-        />
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">Loading tasks...</p>
+          </div>
+        ) : copiedTasks.length === 0 ? (
+          // Show empty state when no tasks found
+          <div className="text-center py-12">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">No tasks found</h3>
+            <p className="text-gray-500">
+              {searchQuery
+                ? `No tasks match "${searchQuery}"`
+                : showTask !== 'ALL'
+                  ? `No ${showTask.toLowerCase()} tasks`
+                  : 'Create your first task to get started'}
+            </p>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="mt-4 text-purple-700 hover:text-purple-800 font-semibold"
+              >
+                Clear search
+              </button>
+            )}
+          </div>
+        ) : (
+          // Show tasks when data exists
+          <Tasks
+            fetchedTasks={copiedTasks}
+            onUpdate={task => {
+              setSelectedTask(task)
+              setIsModelOpen(true)
+            }}
+            onDelete={deleteTask}
+          />
+        )}
       </div>
 
       {isModelOpen && (

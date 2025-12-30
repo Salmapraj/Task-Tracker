@@ -1,12 +1,6 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "title": "Complete React assisgnemt",
-      "dueDate": "2025-12-27",
-      "status": "done"
-    },
-    {
       "id": "2",
       "title": "Read a book",
       "dueDate": "2025-12-29",
@@ -34,6 +28,12 @@
       "id": "0624",
       "title": "nvn",
       "dueDate": "2026-01-08",
+      "status": "pending"
+    },
+    {
+      "id": "823c",
+      "title": "bmbn",
+      "dueDate": "2026-01-28",
       "status": "pending"
     }
   ]

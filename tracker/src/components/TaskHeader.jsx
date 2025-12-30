@@ -1,9 +1,9 @@
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2,CircleCheck  } from 'lucide-react'
 
 const Tasks = ({fetchedTasks,onUpdate,onDelete}) => {
 
   return (
-    <div className=" shadow-xs ">
+    <div id='tasks' className=" shadow-xs ">
       <div className="grid mx-6 bg-[#fafdfd]  grid-cols-4 text-sm font-bold py-5 rounded-xl px-3 text-gray-400">
         <div className=" ">
           <h2>TASK</h2>
@@ -25,7 +25,7 @@ const Tasks = ({fetchedTasks,onUpdate,onDelete}) => {
           key={task.id}
           className="grid border-b border-gray-200  py-2 mx-6 px-4 gap-3 space-y-3 mt-5 grid-cols-4 text-sm "
         >
-          <div>
+          <div className='flex gap-4 items-center'>
             <p className="text-[17px] text-gray-500 font-semibold">{task.title}</p>
           </div>
           <div className="">
