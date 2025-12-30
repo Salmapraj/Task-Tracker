@@ -1,25 +1,43 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import SearchBar from './SearchBar'
+import Tasks from './TaskHeader'
 import { useTasks } from '../hooks/useTasks'
-
+import TaskModal from './TaskForm'
 const Dashboard = () => {
-  const [showTask, setShowTask] = useState('All')
-  const [addTask, setAddTask] = useState(false)
-  const { tasks: fetchedTasks} = useTasks()
-  const [task, setTask] = useState('')
-  const [status, setStatus] = useState('pending')
-  const [dueDate, setDueDate] = useState('')
+  const [showTask, setShowTask] = useState('ALL')
+  const { addTask: createTask,alltasks, updateTask, deleteTask, fetchTasks,filterTask } = useTasks()
+  const [isModelOpen, setIsModelOpen] = useState(false)
+  const [selectedTask, setSelectedTask] = useState(null)
 
-  const handleSubmit = e => {
-    const formData = {
-      title:task,
-      dueDate,
-      status:status.toLowerCase()
+  const handleTaskSubmit = async (formData) => {
+    try {
+      if (selectedTask) {
+        await updateTask(selectedTask.id, formData)
+      } else {
+        await createTask(formData)
+      }
+      setSelectedTask(null)
+    } catch (error) {
+      console.log('Error:', error)
     }
-    console.log(formData)
-    e.preventDefault()
+  }
+  const copiedArray =[...alltasks]
+  const sortedDate = copiedArray.sort((a,b)=>new Date(b.dueDate).getTime()-new Date(a.dueDate).getTime() )
+console.log('sorted array',sortedDate)
 
+  const handleStatus =async (status) => {
+    try {
+      setShowTask(status)
+      if(status==='ALL'){
+        await fetchTasks()
+      }else {
+    await filterTask(status.toLowerCase())
+  }
+
+    } catch (error) {
+      console.log('Error:', error)
+    }
   }
 
   return (
@@ -40,17 +58,24 @@ const Dashboard = () => {
           </div>
 
           <div className=" flex  gap-3 rounded-lg shadow-sm">
-            {['All', 'Pending', 'Done'].map(status => (
+            {['ALL', 'PENDING', 'DONE'].map(status => (
               <button
-                className={`px-3 py-2 cursor-pointer ${showTask === status ? 'text-purple-700 font-semibold shadow-sm px-4  rounded-xl ' : 'text-gray-400 hover:text-gray-900'}`}
+                className={`px-3 cursor-pointer ${showTask.toUpperCase() === status ? 'text-purple-700  shadow-sm px-4 text-sm py-2 font-bold   rounded-xl ' : 'text-gray-400 text-sm py-2 font-bold   hover:text-gray-900'}`}
                 key={status}
-                onClick={() => setShowTask(status)}
+                onClick={()=>handleStatus(status)}
               >
                 {status}
               </button>
             ))}
+
             <div className="ml-3">
-              <div onClick={() => setAddTask(true)} className="bg-purple-700 p-2 rounded-lg">
+              <div
+                onClick={() => {
+                  setIsModelOpen(true)
+                  setSelectedTask(null)
+                }}
+                className="bg-purple-700 p-2 rounded-lg"
+              >
                 <Plus size={27} className="text-white" />
               </div>
             </div>
@@ -58,132 +83,22 @@ const Dashboard = () => {
         </div>
 
         {/* main content */}
-        <div className=" shadow-xs ">
-          <div className="grid mx-6 bg-[#fafdfd]  grid-cols-4 text-sm font-bold py-5 rounded-xl px-3 text-gray-400">
-            <div className=" ">
-              <h2>TASK</h2>
-            </div>
-            <div className="">
-              <h2>STATUS</h2>
-            </div>
-            <div className="">
-              <h2>DUE DATE</h2>
-            </div>
-            <div className="">
-              <h2>ACTIONS</h2>
-            </div>
-          </div>
-          <hr className="text-gray-200" />
-          {fetchedTasks.map(task => (
-            <div
-              key={task.id}
-              className="grid border-b border-gray-200  py-2 mx-6 px-4 gap-3 space-y-3 mt-5 grid-cols-4 text-sm "
-            >
-              <div>
-                <p className="text-[17px] text-gray-500 font-semibold">{task.title}</p>
-              </div>
-              <div className="">
-                <p
-                  className={
-                    task.status === 'pending'
-                      ? 'text-green-600 font-semibold bg-[#ddfde7] rounded-lg  inline p-2'
-                      : 'text-blue-600 font-semibold rounded-lg bg-blue-100  inline p-2'
-                  }
-                >
-                  {task.status.toLowerCase()}
-                </p>
-              </div>
-              <div>
-                <p className="text-[15px] text-gray-500 font-semibold">
-                  {new Date(task.dueDate).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: '2-digit',
-                  })}
-                </p>
-              </div>
-              <div className="flex gap-6">
-                <button>
-                  <Pencil size={18} className="text-gray-500 cursor-pointer" />
-                </button>
-                <button>
-                  <Trash2 size={18} className="text-gray-500 cursor-pointer" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Tasks
+          fetchedTasks={copiedArray}
+          onUpdate={task => {
+            setSelectedTask(task)
+            setIsModelOpen(true)
+          }}
+          onDelete={deleteTask}
+        />
       </div>
 
-      {addTask && (
-        <div
-          className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
-          onClick={() => setAddTask(false)}
-        >
-          <div
-            className="relative bg-white w-full max-w-lg rounded-[2rem] shadow-2xl p-8"
-            onClick={e => e.stopPropagation()} // Prevents closing when clicking inside modal
-          >
-            <form onSubmit={handleSubmit}>
-              <h1 className="text-2xl font-bold mb-6 text-gray-600">New Task</h1>
-              <div className="mb-4">
-                <label className="text-sm font-bold text-gray-600 flex items-center gap-2 mb-2">
-                  Task Title
-                </label>
-                <input
-                  type="text"
-                  value={task}
-                  onChange={e => setTask(e.target.value)}
-                  required
-                  placeholder="Task Title"
-                  className="p-3 w-full text-gray-600 rounded-md border-2 border-gray-300 focus:border-purple-500 outline-none"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-bold text-gray-600 flex items-center gap-2 mb-2">
-                  Due Date
-                </label>
-                <input
-                  value={dueDate}
-                  onChange={e => setDueDate(e.target.value)}
-                  type="date"
-                  required
-                  className="p-3 w-full rounded-md border-2  text-gray-600 border-gray-300 focus:border-purple-500 outline-none"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-bold text-slate-700 flex items-center gap-2 mb-2">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={e => setStatus(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50  text-gray-600 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:bg-white outline-none"
-                >
-                  <option>Pending</option>
-                  <option>Done</option>
-                </select>
-              </div>
-
-              <div className="flex gap-4 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setAddTask(false)}
-                  className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-6 py-3 bg-purple-700 text-white rounded-lg font-semibold hover:bg-purple-800"
-                >
-                  Create Task
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      {isModelOpen && (
+        <TaskModal
+          setModel={setIsModelOpen}
+          initialTask={selectedTask}
+          onFormSubmit={handleTaskSubmit}
+        />
       )}
     </div>
   )
