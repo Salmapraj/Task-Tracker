@@ -24,9 +24,6 @@ const Tasks = ({ fetchedTasks, onUpdate, onDelete, onToggleStatus }) => {
           key={task.id}
           className="grid border-b border-gray-200  py-2 mx-6 px-4 gap-3 space-y-3 mt-5 grid-cols-4 text-sm "
         >
-          {/* <div className='flex gap-4 items-center'>
-            <p className="text-[17px] text-gray-500 font-semibold">{task.title}</p>
-          </div> */}
           <div className="flex gap-4 items-center">
             <button onClick={() => onToggleStatus(task)}>
               <CircleCheck
