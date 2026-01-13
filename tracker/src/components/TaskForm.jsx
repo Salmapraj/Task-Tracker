@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const TaskModal = ({ setModel, initialTask=null, onFormSubmit}) => {
+const TaskModal = ({ setModel, initialTask = null, onFormSubmit }) => {
   const [task, setTask] = useState('')
   const [status, setStatus] = useState('pending')
   const [dueDate, setDueDate] = useState('')
@@ -18,9 +18,9 @@ const TaskModal = ({ setModel, initialTask=null, onFormSubmit}) => {
     }
   }, [initialTask])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault()
-  
+
     try {
       await onFormSubmit(formData)
       setModel(false)

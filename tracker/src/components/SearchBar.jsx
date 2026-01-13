@@ -1,13 +1,9 @@
 import { useState,React, useEffect } from 'react'
 import { Search } from 'lucide-react'
-import { useDebounce } from '../hooks/useDebounce'
 
-const SearchBar = ({onSearch}) => {
+const SearchBar = () => {
 const [searchTerm,setSearchTerm]=useState("")
-const debounce=useDebounce(searchTerm,500) ;
-useEffect(()=>{
-onSearch(debounce)
-},[debounce])
+
 
 
   return (

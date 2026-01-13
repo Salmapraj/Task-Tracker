@@ -13,7 +13,7 @@ export const taskapi = {
   },
 
   updateTask: async (id, postData) => {
-    const response = await axios.patch(`${apiUrl}/${id}`, postData)
+    const response = await axios.put(`${apiUrl}/${id}`, postData)
 
     return response.data
   },
@@ -23,8 +23,5 @@ export const taskapi = {
     return response.data
   },
 
-  filterTask: async(status) => {
-    const response = await axios.get(`${apiUrl}?status=${status}`)
-    return response.data;
-  },
+  
 }

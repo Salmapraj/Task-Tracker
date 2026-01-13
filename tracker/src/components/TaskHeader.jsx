@@ -1,8 +1,47 @@
 import { Pencil, Trash2, CircleCheck } from 'lucide-react'
+import { useTasks } from '../hooks/useTasks'
 
-const Tasks = ({ fetchedTasks, onUpdate, onDelete, onToggleStatus }) => {
+const Tasks = ({ fetchedTasks, onUpdate, onDelete, onToggleStatus,onChange,statusFilter }) => {
   return (
     <div id="tasks" className=" shadow-xs ">
+
+      <div className="p-6 flex mb-5 border-b border-gray-200 justify-between items-start">
+                <div>
+                  <h2 className=" text-md font-bold md:text-xl text-purple-700 lg:text-3xl mb-2">
+                    Workspace Tasks
+                  </h2>
+                  <p className="text-sm  text-gray-500 md:text-md lg:text-[17px]">
+                    Manage and track your active projects
+                  </p>{' '}
+                </div>
+      
+                <div className=" flex  gap-3 rounded-lg shadow-sm">
+                  {['ALL', 'PENDING', 'DONE'].map(status => (
+                    <button
+                      className={`px-3 cursor-pointer ${statusFilter.toUpperCase() === status ? 'text-purple-700  shadow-sm px-4 text-sm py-2 font-bold   rounded-xl ' : 'text-gray-400 text-sm py-2 font-bold   hover:text-gray-900'}`}
+                      key={status}
+                      onClick={() => onChange(status)}
+                    >
+                      {status}
+                    </button>
+                  ))}
+      
+                  {/* <div className="ml-3">
+                    <div
+                      onClick={() => {
+                        setIsModelOpen(true)
+                        setSelectedTask(null)
+                      }}
+                      className="bg-purple-700 p-2 rounded-lg"
+                    >
+                      <Plus size={27} className="text-white" />
+                    </div>
+                  </div> */}
+                </div>
+              </div>
+
+
+
       <div className="grid mx-6 bg-[#fafdfd]  grid-cols-4 text-sm font-bold py-5 rounded-xl px-3 text-gray-400">
         <div className=" ">
           <h2>TASK</h2>
@@ -18,6 +57,7 @@ const Tasks = ({ fetchedTasks, onUpdate, onDelete, onToggleStatus }) => {
         </div>
       </div>
       <hr className="text-gray-200" />
+
 
       {fetchedTasks.map(task => (
         <div
